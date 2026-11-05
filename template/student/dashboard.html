@@ -1,0 +1,348 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+
+<style>
+
+.dashboard-container {
+    padding: 30px;
+}
+
+.welcome {
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    height: 100%;
+}
+
+.stat-icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.menu-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transition: 0.3s;
+    height: 100%;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+}
+
+.menu-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.menu-card a {
+    text-decoration: none;
+    color: #333;
+}
+
+</style>
+
+<div class="container-fluid dashboard-container">
+<!-- ==========================================
+     BIENVENUE
+=========================================== -->
+
+<div class="welcome">
+
+    <h2>
+        Bonjour {{ session["prenom"] }} 👋
+    </h2>
+
+    <p class="text-muted">
+        Bienvenue dans votre espace stagiaire.
+    </p>
+
+</div>
+
+
+<!-- ==========================================
+     STATISTIQUES
+=========================================== -->
+
+<div class="row g-4 mb-4">
+
+    <!-- CANDIDATURES -->
+
+    <div class="col-md-4">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📄
+            </div>
+
+            <div class="stat-number">
+                {{ total_applications }}
+            </div>
+
+            <p class="text-muted">
+                Candidatures
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- OFFRES -->
+
+    <div class="col-md-4">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🔎
+            </div>
+
+            <div class="stat-number">
+                {{ total_offers }}
+            </div>
+
+            <p class="text-muted">
+                Offres disponibles
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- STAGE -->
+
+    <div class="col-md-4">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🎓
+            </div>
+
+            <div class="stat-number">
+                {% if internship %}
+                    En cours
+                {% else %}
+                    Aucun
+                {% endif %}
+            </div>
+
+            <p class="text-muted">
+                Stage actuel
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     FONCTIONNALITÉS
+=========================================== -->
+
+<h4 class="mb-3">
+    Mes services
+</h4>
+
+
+<div class="row g-4">
+
+    <!-- ======================================
+         PROFIL
+    ======================================= -->
+
+    <div class="col-md-4">
+
+        <div class="menu-card">
+
+            <a href="{{ url_for('student_profile') }}">
+
+                <div class="menu-icon">
+                    👤
+                </div>
+
+                <h5>
+                    Mon profil
+                </h5>
+
+                <p class="text-muted">
+                    Consulter et modifier mes informations
+                </p>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================
+         CV
+    ======================================= -->
+
+    <div class="col-md-4">
+
+        <div class="menu-card">
+
+            <a href="{{ url_for('student_cv') }}">
+
+                <div class="menu-icon">
+                    📄
+                </div>
+
+                <h5>
+                    Mon CV
+                </h5>
+
+                <p class="text-muted">
+                    Ajouter ou mettre à jour mon CV
+                </p>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================
+         OFFRES
+    ======================================= -->
+
+    <div class="col-md-4">
+
+        <div class="menu-card">
+
+            <a href="{{ url_for('student_offers') }}">
+
+                <div class="menu-icon">
+                    🔎
+                </div>
+
+                <h5>
+                    Offres de stage
+                </h5>
+
+                <p class="text-muted">
+                    Rechercher des offres de stage
+                </p>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================
+         CANDIDATURES
+    ======================================= -->
+
+    <div class="col-md-4">
+
+        <div class="menu-card">
+
+            <a href="{{ url_for('student_applications') }}">
+
+                <div class="menu-icon">
+                    📋
+                </div>
+
+                <h5>
+                    Mes candidatures
+                </h5>
+
+                <p class="text-muted">
+                    Suivre mes candidatures
+                </p>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================
+         MON STAGE
+    ======================================= -->
+
+    <div class="col-md-4">
+
+        <div class="menu-card">
+
+            <a href="{{ url_for('student_internship') }}">
+
+                <div class="menu-icon">
+                    🎓
+                </div>
+
+                <h5>
+                    Mon stage
+                </h5>
+
+                <p class="text-muted">
+                    Consulter les informations de mon stage
+                </p>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================
+         MON ÉVALUATION
+    ======================================= -->
+
+    <div class="col-md-4">
+
+        <div class="menu-card">
+
+            <a href="{{ url_for('student_evaluation') }}">
+
+                <div class="menu-icon">
+                    ⭐
+                </div>
+
+                <h5>
+                    Mon évaluation
+                </h5>
+
+                <p class="text-muted">
+                    Consulter mon évaluation de stage
+                </p>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+{% endblock %}

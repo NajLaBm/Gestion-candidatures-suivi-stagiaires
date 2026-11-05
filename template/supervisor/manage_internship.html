@@ -1,0 +1,849 @@
+{% extends 'base2.html' %}
+
+{% block title %}
+Gérer le stage
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+
+    <div>
+        <h2 class="fw-bold">
+            🎯 Gérer le stage
+        </h2>
+
+        <p class="text-muted mb-0">
+            {{ internship.titre or "Stage" }}
+        </p>
+    </div>
+
+    <a href="{{ url_for('supervisor_dashboard') }}"
+       class="btn btn-secondary">
+        ← Retour au dashboard
+    </a>
+
+</div>
+
+
+<!-- =====================================================
+     MESSAGES
+====================================================== -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div class="alert alert-{{ category }} alert-dismissible fade show">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+
+
+<!-- =====================================================
+     INFORMATIONS DU STAGE
+====================================================== -->
+
+<div class="card border-0 shadow-sm mb-5">
+
+    <div class="card-body p-4">
+
+        <h4 class="fw-bold mb-4">
+            📚 Informations du stage
+        </h4>
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <p>
+                    <strong>📌 Stage :</strong>
+                    {{ internship.titre or "Stage" }}
+                </p>
+
+                <p>
+                    <strong>🎓 Stagiaire :</strong>
+
+                    {% if internship.student and internship.student.user %}
+
+                        {{ internship.student.user.prenom }}
+                        {{ internship.student.user.nom }}
+
+                    {% else %}
+
+                        Stagiaire
+
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <p>
+                    <strong>📅 Date de début :</strong>
+
+                    {% if internship.date_debut %}
+
+                        {{ internship.date_debut.strftime('%d/%m/%Y') }}
+
+                    {% else %}
+
+                        Non définie
+
+                    {% endif %}
+
+                </p>
+
+
+                <p>
+                    <strong>📅 Date de fin :</strong>
+
+                    {% if internship.date_fin %}
+
+                        {{ internship.date_fin.strftime('%d/%m/%Y') }}
+
+                    {% else %}
+
+                        Non définie
+
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <p class="mb-0">
+
+            <strong>📊 Statut du stage :</strong>
+
+            {% if internship.statut == "En cours" %}
+
+                <span class="badge bg-primary">
+                    En cours
+                </span>
+
+            {% elif internship.statut == "Terminé" %}
+
+                <span class="badge bg-success">
+                    Terminé
+                </span>
+
+            {% else %}
+
+                <span class="badge bg-secondary">
+                    {{ internship.statut or "Non défini" }}
+                </span>
+
+            {% endif %}
+
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     AJOUTER UNE TÂCHE
+====================================================== -->
+
+<div class="card border-0 shadow-sm mb-5">
+
+    <div class="card-body p-4">
+
+        <h4 class="fw-bold mb-4">
+            ➕ Ajouter une tâche
+        </h4>
+
+        <form method="POST"
+              action="{{ url_for(
+                  'supervisor_manage_internship',
+                  internship_id=internship.id
+              ) }}">
+
+            <!-- TITRE -->
+
+            <div class="mb-3">
+
+                <label class="form-label fw-bold">
+                    Titre de la tâche *
+                </label>
+
+                <input type="text"
+                       name="titre"
+                       class="form-control"
+                       placeholder="Ex : Développer le module de connexion"
+                       required>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="mb-3">
+
+                <label class="form-label fw-bold">
+                    Description
+                </label>
+
+                <textarea name="description"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Décrire précisément la tâche..."></textarea>
+
+            </div>
+
+
+            <!-- DATES -->
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-bold">
+                        📅 Date de début
+                    </label>
+
+                    <input type="date"
+                           name="date_debut"
+                           class="form-control">
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-bold">
+                        📅 Date limite
+                    </label>
+
+                    <input type="date"
+                           name="date_limite"
+                           class="form-control">
+
+                </div>
+
+            </div>
+
+
+            <!-- PRIORITE / STATUT / PROGRESSION -->
+
+            <div class="row">
+
+                <!-- PRIORITE -->
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label fw-bold">
+                        ⚡ Priorité
+                    </label>
+
+                    <select name="priorite"
+                            class="form-select">
+
+                        <option value="Basse">
+                            Basse
+                        </option>
+
+                        <option value="Normale"
+                                selected>
+                            Normale
+                        </option>
+
+                        <option value="Haute">
+                            Haute
+                        </option>
+
+                        <option value="Urgente">
+                            Urgente
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- STATUT -->
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label fw-bold">
+                        📊 Statut
+                    </label>
+
+                    <select name="statut"
+                            class="form-select">
+
+                        <option value="À faire">
+                            À faire
+                        </option>
+
+                        <option value="En cours">
+                            En cours
+                        </option>
+
+                        <option value="Terminée">
+                            Terminée
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- PROGRESSION -->
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label fw-bold">
+                        📈 Progression
+                    </label>
+
+                    <div class="input-group">
+
+                        <input type="number"
+                               name="progression"
+                               class="form-control"
+                               value="0"
+                               min="0"
+                               max="100">
+
+                        <span class="input-group-text">
+                            %
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button type="submit"
+                    class="btn btn-primary">
+
+                ➕ Ajouter la tâche
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     LISTE DES TÂCHES
+====================================================== -->
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h4 class="fw-bold mb-1">
+            📝 Tâches du stage
+        </h4>
+
+        <p class="text-muted mb-0">
+            {{ tasks|length }} tâche(s) définie(s)
+        </p>
+
+    </div>
+
+</div>
+
+
+
+{% if tasks %}
+
+    {% for task in tasks %}
+
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div class="card-body p-4">
+
+
+                <!-- =================================================
+                     EN-TÊTE TÂCHE
+                ================================================== -->
+
+                <div class="d-flex justify-content-between align-items-start mb-3">
+
+                    <div>
+
+                        <h5 class="fw-bold mb-1">
+
+                            {{ loop.index }}.
+                            {{ task.titre }}
+
+                        </h5>
+
+                        <small class="text-muted">
+                            Tâche du stage
+                        </small>
+
+                    </div>
+
+
+                    <!-- STATUT -->
+
+                    {% if task.statut == "À faire" %}
+
+                        <span class="badge bg-secondary">
+                            À faire
+                        </span>
+
+                    {% elif task.statut == "En cours" %}
+
+                        <span class="badge bg-primary">
+                            En cours
+                        </span>
+
+                    {% elif task.statut == "Terminée" %}
+
+                        <span class="badge bg-success">
+                            Terminée
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-secondary">
+                            {{ task.statut or "Non défini" }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- =================================================
+                     DESCRIPTION
+                ================================================== -->
+
+                {% if task.description %}
+
+                    <div class="mb-4">
+
+                        <h6 class="fw-bold">
+                            📄 Description
+                        </h6>
+
+                        <p class="text-muted mb-0">
+                            {{ task.description }}
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                     INFORMATIONS
+                ================================================== -->
+
+                <div class="row mb-4">
+
+                    <div class="col-md-3">
+
+                        <small class="text-muted">
+                            📅 Début
+                        </small>
+
+                        <br>
+
+                        <strong>
+
+                            {% if task.date_debut %}
+
+                                {{ task.date_debut.strftime('%d/%m/%Y') }}
+
+                            {% else %}
+
+                                Non définie
+
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <small class="text-muted">
+                            📅 Date limite
+                        </small>
+
+                        <br>
+
+                        <strong>
+
+                            {% if task.date_limite %}
+
+                                {{ task.date_limite.strftime('%d/%m/%Y') }}
+
+                            {% else %}
+
+                                Non définie
+
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <small class="text-muted">
+                            ⚡ Priorité
+                        </small>
+
+                        <br>
+
+                        <strong>
+
+                            {{ task.priorite or "Normale" }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <small class="text-muted">
+                            📈 Progression
+                        </small>
+
+                        <br>
+
+                        <strong>
+
+                            {{ task.progression or 0 }} %
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     BARRE DE PROGRESSION
+                ================================================== -->
+
+                <div class="mb-4">
+
+                    <div class="d-flex justify-content-between mb-1">
+
+                        <small class="text-muted">
+                            Progression de la tâche
+                        </small>
+
+                        <small class="fw-bold">
+                            {{ task.progression or 0 }} %
+                        </small>
+
+                    </div>
+
+                    <div class="progress"
+                         style="height: 12px;">
+
+                        <div class="progress-bar"
+                             role="progressbar"
+                             style="width: {{ task.progression or 0 }}%;"
+                             aria-valuenow="{{ task.progression or 0 }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <hr>
+
+
+
+                <!-- =================================================
+                     MODIFIER LA TÂCHE
+                ================================================== -->
+
+                <div class="mt-4">
+
+                    <h6 class="fw-bold mb-3">
+                        ✏️ Modifier la tâche
+                    </h6>
+
+
+                    <form method="POST"
+                          action="{{ url_for(
+                              'supervisor_update_task',
+                              task_id=task.id
+                          ) }}">
+
+                        <div class="row">
+
+                            <!-- STATUT -->
+
+                            <div class="col-md-4 mb-3">
+
+                                <label class="form-label">
+                                    Statut
+                                </label>
+
+                                <select name="statut"
+                                        class="form-select">
+
+                                    <option value="À faire"
+                                        {% if task.statut == "À faire" %}
+                                            selected
+                                        {% endif %}>
+                                        À faire
+                                    </option>
+
+                                    <option value="En cours"
+                                        {% if task.statut == "En cours" %}
+                                            selected
+                                        {% endif %}>
+                                        En cours
+                                    </option>
+
+                                    <option value="Terminée"
+                                        {% if task.statut == "Terminée" %}
+                                            selected
+                                        {% endif %}>
+                                        Terminée
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- PROGRESSION -->
+
+                            <div class="col-md-4 mb-3">
+
+                                <label class="form-label">
+                                    Progression (%)
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input type="number"
+                                           name="progression"
+                                           class="form-control"
+                                           value="{{ task.progression or 0 }}"
+                                           min="0"
+                                           max="100"
+                                           required>
+
+                                    <span class="input-group-text">
+                                        %
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- PRIORITE -->
+
+                            <div class="col-md-4 mb-3">
+
+                                <label class="form-label">
+                                    Priorité
+                                </label>
+
+                                <select name="priorite"
+                                        class="form-select">
+
+                                    <option value="Basse"
+                                        {% if task.priorite == "Basse" %}
+                                            selected
+                                        {% endif %}>
+                                        Basse
+                                    </option>
+
+                                    <option value="Normale"
+                                        {% if task.priorite == "Normale" or not task.priorite %}
+                                            selected
+                                        {% endif %}>
+                                        Normale
+                                    </option>
+
+                                    <option value="Haute"
+                                        {% if task.priorite == "Haute" %}
+                                            selected
+                                        {% endif %}>
+                                        Haute
+                                    </option>
+
+                                    <option value="Urgente"
+                                        {% if task.priorite == "Urgente" %}
+                                            selected
+                                        {% endif %}>
+                                        Urgente
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <button type="submit"
+                                class="btn btn-outline-primary btn-sm">
+
+                            💾 Enregistrer les modifications
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <!-- =====================================================
+         AUCUNE TÂCHE
+    ====================================================== -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body text-center py-5">
+
+            <div style="font-size: 55px;">
+                📝
+            </div>
+
+            <h5 class="mt-3">
+                Aucune tâche définie
+            </h5>
+
+            <p class="text-muted mb-0">
+                Commencez par ajouter les tâches du stage.
+            </p>
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+
+
+<!-- =====================================================
+     INFORMATION ÉVALUATION
+====================================================== -->
+
+{% if internship.statut == "Terminé" %}
+
+    <div class="card border-0 shadow-sm mt-5">
+
+        <div class="card-body p-4">
+
+            <h4 class="fw-bold">
+                ⭐ Évaluation finale
+            </h4>
+
+            <p class="text-muted">
+                Le stage est terminé. Vous pouvez maintenant
+                procéder à l'évaluation finale du stagiaire.
+            </p>
+
+            <a href="{{ url_for(
+                'supervisor_evaluation',
+                internship_id=internship.id
+            ) }}"
+               class="btn btn-warning">
+
+                ⭐ Évaluer le stagiaire
+
+            </a>
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+
+</div>
+
+<!-- =========================================================
+     STYLE
+========================================================= -->
+
+<style>
+
+.card {
+    border-radius: 15px;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    transition: 0.2s;
+}
+
+.badge {
+    padding: 7px 10px;
+}
+
+.progress {
+    border-radius: 10px;
+}
+
+.progress-bar {
+    border-radius: 10px;
+}
+
+</style>
+
+{% endblock %}

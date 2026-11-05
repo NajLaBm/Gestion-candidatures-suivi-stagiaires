@@ -1,0 +1,643 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+Dashboard Encadrant
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+
+        <div>
+
+            <h2 class="fw-bold">
+                👨‍🏫 Espace Encadrant
+            </h2>
+
+            <p class="text-muted mb-0">
+                Gérez les stagiaires qui vous sont affectés et suivez leur progression.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         STATISTIQUES
+    ====================================================== -->
+
+    <div class="row g-4 mb-5">
+
+        <!-- STAGIAIRES -->
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <p class="text-muted mb-1">
+                        Stagiaires
+                    </p>
+
+                    <h3 class="fw-bold">
+                        {{ internships|length }}
+                    </h3>
+
+                    <div style="font-size: 35px;">
+                        👥
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STAGES EN COURS -->
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <p class="text-muted mb-1">
+                        Stages en cours
+                    </p>
+
+                    <h3 class="fw-bold">
+                        {{ internships
+                           |selectattr('statut', 'equalto', 'En cours')
+                           |list
+                           |length }}
+                    </h3>
+
+                    <div style="font-size: 35px;">
+                        📚
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STAGES TERMINÉS -->
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <p class="text-muted mb-1">
+                        Stages terminés
+                    </p>
+
+                    <h3 class="fw-bold">
+                        {{ internships
+                           |selectattr('statut', 'equalto', 'Terminé')
+                           |list
+                           |length }}
+                    </h3>
+
+                    <div style="font-size: 35px;">
+                        ✅
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- OBJECTIFS -->
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <p class="text-muted mb-1">
+                        Objectifs définis
+                    </p>
+
+                    <h3 class="fw-bold">
+                        {{ internships
+                           |selectattr('objectifs')
+                           |list
+                           |length }}
+                    </h3>
+
+                    <div style="font-size: 35px;">
+                        🎯
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MES STAGIAIRES
+    ====================================================== -->
+
+    <div class="mb-4">
+
+        <h4 class="fw-bold">
+            👥 Mes stagiaires
+        </h4>
+
+        <p class="text-muted">
+            Consultez les informations et gérez la progression de vos stagiaires.
+        </p>
+
+    </div>
+
+
+    {% if internships %}
+
+        <div class="row g-4">
+
+            {% for internship in internships %}
+
+                <div class="col-lg-6">
+
+                    <div class="card border-0 shadow-sm h-100">
+
+                        <div class="card-body p-4">
+
+
+                            <!-- =================================================
+                                 STAGIAIRE
+                            ================================================== -->
+
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+
+                                <div>
+
+                                    <h5 class="fw-bold mb-1">
+
+                                        {% if internship.student
+                                              and internship.student.user %}
+
+                                            {{ internship.student.user.prenom }}
+                                            {{ internship.student.user.nom }}
+
+                                        {% else %}
+
+                                            Stagiaire
+
+                                        {% endif %}
+
+                                    </h5>
+
+                                    <small class="text-muted">
+                                        🎓 Stagiaire
+                                    </small>
+
+                                </div>
+
+
+                                <!-- STATUT DU STAGE -->
+
+                                {% if internship.statut == "En cours" %}
+
+                                    <span class="badge bg-primary">
+                                        En cours
+                                    </span>
+
+                                {% elif internship.statut == "Terminé" %}
+
+                                    <span class="badge bg-success">
+                                        Terminé
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        {{ internship.statut or "Non défini" }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 INFORMATIONS STAGE
+                            ================================================== -->
+
+                            <div class="mb-3">
+
+                                <p class="mb-2">
+
+                                    <strong>
+                                        📌 Stage :
+                                    </strong>
+
+                                    {{ internship.titre or "Stage" }}
+
+                                </p>
+
+
+                                <p class="mb-2">
+
+                                    <strong>
+                                        📅 Début :
+                                    </strong>
+
+                                    {% if internship.date_debut %}
+
+                                        {{ internship.date_debut.strftime('%d/%m/%Y') }}
+
+                                    {% else %}
+
+                                        Non définie
+
+                                    {% endif %}
+
+                                </p>
+
+
+                                <p class="mb-2">
+
+                                    <strong>
+                                        📅 Fin :
+                                    </strong>
+
+                                    {% if internship.date_fin %}
+
+                                        {{ internship.date_fin.strftime('%d/%m/%Y') }}
+
+                                    {% else %}
+
+                                        Non définie
+
+                                    {% endif %}
+
+                                </p>
+
+                            </div>
+
+
+                            <hr>
+
+
+                            <!-- =================================================
+                                 OBJECTIFS
+                            ================================================== -->
+
+                            <div class="mb-3">
+
+                                <h6 class="fw-bold">
+                                    🎯 Objectifs
+                                </h6>
+
+                                {% if internship.objectifs %}
+
+                                    <p class="text-muted mb-0">
+                                        {{ internship.objectifs }}
+                                    </p>
+
+                                {% else %}
+
+                                    <p class="text-muted mb-0">
+                                        Aucun objectif défini.
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 TÂCHES
+                            ================================================== -->
+
+                            <div class="mb-3">
+
+                                <h6 class="fw-bold">
+                                    📝 Tâches du stage
+                                </h6>
+
+
+                                {% if internship.tasks %}
+
+                                    <div class="mt-3">
+
+                                        {% for task in internship.tasks %}
+
+                                            <div class="border rounded p-3 mb-2">
+
+                                                <div class="d-flex justify-content-between">
+
+                                                    <strong>
+                                                        {{ loop.index }}.
+                                                        {{ task.titre }}
+                                                    </strong>
+
+
+                                                    {% if task.statut == "Terminée" %}
+
+                                                        <span class="badge bg-success">
+                                                            Terminée
+                                                        </span>
+
+                                                    {% elif task.statut == "En cours" %}
+
+                                                        <span class="badge bg-primary">
+                                                            En cours
+                                                        </span>
+
+                                                    {% else %}
+
+                                                        <span class="badge bg-secondary">
+                                                            À faire
+                                                        </span>
+
+                                                    {% endif %}
+
+                                                </div>
+
+
+                                                <!-- PROGRESSION -->
+
+                                                <div class="mt-2">
+
+                                                    <div class="d-flex justify-content-between">
+
+                                                        <small class="text-muted">
+                                                            Progression
+                                                        </small>
+
+                                                        <small class="fw-bold">
+
+                                                            {{ task.progression or 0 }}%
+
+                                                        </small>
+
+                                                    </div>
+
+
+                                                    <div class="progress mt-1"
+                                                         style="height: 8px;">
+
+                                                        <div
+                                                            class="progress-bar"
+                                                            role="progressbar"
+                                                            style="width: {{ task.progression or 0 }}%;"
+                                                            aria-valuenow="{{ task.progression or 0 }}"
+                                                            aria-valuemin="0"
+                                                            aria-valuemax="100">
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+
+
+                                    <!-- NOMBRE DE TÂCHES -->
+
+                                    <small class="text-muted">
+
+                                        {{ internship.tasks|length }}
+                                        tâche(s) définie(s)
+
+                                    </small>
+
+
+                                {% else %}
+
+                                    <div class="alert alert-light border">
+
+                                        <p class="mb-0 text-muted">
+
+                                            📝 Aucune tâche définie pour le moment.
+
+                                        </p>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 REMARQUES
+                            ================================================== -->
+
+                            {% if internship.remarques %}
+
+                                <div class="alert alert-light">
+
+                                    <strong>
+                                        💬 Remarques :
+                                    </strong>
+
+                                    <br>
+
+                                    {{ internship.remarques }}
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- =================================================
+                                 ÉVALUATION
+                            ================================================== -->
+
+                            {% if internship.evaluation %}
+
+                                <div class="alert alert-success">
+
+                                    <strong>
+                                        ⭐ Évaluation disponible
+                                    </strong>
+
+                                    <br>
+
+                                    Note finale :
+
+                                    <strong>
+                                        {{ internship.evaluation.note_finale }}/20
+                                    </strong>
+
+                                </div>
+
+                            {% else %}
+
+                                {% if internship.statut == "Terminé" %}
+
+                                    <div class="alert alert-warning">
+
+                                        ⚠️ Le stage est terminé mais
+                                        l'évaluation n'a pas encore été réalisée.
+
+                                    </div>
+
+                                {% endif %}
+
+                            {% endif %}
+
+
+                           <!-- =================================================
+     ACTIONS
+================================================= -->
+
+<div class="d-flex flex-wrap gap-2 mt-4">
+
+    <!-- GÉRER LE STAGE / TÂCHES -->
+
+    <a href="{{ url_for(
+        'supervisor_manage_internship',
+        internship_id=internship.id
+    ) }}"
+       class="btn btn-primary btn-sm">
+
+        🎯 Gérer les tâches
+
+    </a>
+
+
+   <!-- =================================================
+     EVALUATION
+================================================= -->
+
+{% set all_tasks_completed = internship.tasks|length > 0 and
+    internship.tasks|selectattr('progression', 'equalto', 100)|list|length
+    == internship.tasks|length
+%}
+
+{% if all_tasks_completed %}
+
+    <a href="{{ url_for(
+        'supervisor_evaluation',
+        internship_id=internship.id
+    ) }}"
+       class="btn btn-outline-warning btn-sm">
+
+        ⭐ Évaluer le stagiaire
+
+    </a>
+
+{% else %}
+
+    <button
+        type="button"
+        class="btn btn-outline-secondary btn-sm"
+        disabled
+        title="Toutes les tâches doivent être terminées à 100 %">
+
+        🔒 Évaluation indisponible
+
+    </button>
+
+{% endif %}
+
+</div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <!-- =====================================================
+             AUCUN STAGIAIRE
+        ====================================================== -->
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <div style="font-size: 60px;">
+                    👥
+                </div>
+
+                <h5 class="mt-3">
+                    Aucun stagiaire affecté
+                </h5>
+
+                <p class="text-muted mb-0">
+
+                    Les stagiaires qui vous seront affectés
+                    apparaîtront ici.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =========================================================
+     STYLE
+========================================================= -->
+
+<style>
+
+.card {
+    border-radius: 15px;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    transition: 0.2s;
+}
+
+.badge {
+    padding: 7px 10px;
+}
+
+.progress {
+    border-radius: 10px;
+}
+
+.progress-bar {
+    border-radius: 10px;
+}
+
+</style>
+
+
+{% endblock %}
+

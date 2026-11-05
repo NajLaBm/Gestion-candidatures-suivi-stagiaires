@@ -1,0 +1,715 @@
+{% extends 'base2.html' %}
+
+{% block title %}
+Dashboard Recruteur
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                🏢 Dashboard Recruteur
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Bienvenue,
+
+                {% if recruiter and recruiter.nom_entreprise %}
+                    {{ recruiter.nom_entreprise }}
+                {% else %}
+                    {{ user.nom }} {{ user.prenom }}
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a href="{{ url_for('recruiter_profile') }}"
+               class="btn btn-outline-primary">
+
+                👤 Mon profil
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         MESSAGES
+    ========================== -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="alert alert-{{ category }} alert-dismissible fade show">
+
+                    {{ message }}
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert">
+                    </button>
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- =========================
+         STATISTIQUES
+    ========================== -->
+
+    <div class="row g-4 mb-4">
+
+
+        <!-- OFFRES -->
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <p class="text-muted mb-1">
+                                Offres publiées
+                            </p>
+
+                            <h2 class="fw-bold">
+
+                                {{ total_offers|default(0) }}
+
+                            </h2>
+
+                        </div>
+
+                        <div style="font-size: 40px;">
+                            📢
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CANDIDATURES -->
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <p class="text-muted mb-1">
+                                Candidatures reçues
+                            </p>
+
+                            <h2 class="fw-bold">
+
+                                {{ total_applications|default(0) }}
+
+                            </h2>
+
+                        </div>
+
+                        <div style="font-size: 40px;">
+                            👥
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CANDIDATURES EN COURS -->
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <p class="text-muted mb-1">
+                                Candidatures en cours
+                            </p>
+
+                            <h2 class="fw-bold">
+
+                                {{ pending_application|default(0) }}
+
+                            </h2>
+
+                        </div>
+
+                        <div style="font-size: 40px;">
+                            ⏳
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         ACTIONS RAPIDES
+    ========================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-4">
+
+            <h5 class="fw-bold mb-4">
+                ⚡ Actions rapides
+            </h5>
+
+
+            <div class="row g-3">
+
+
+                <!-- CREER OFFRE -->
+
+                <div class="col-md-4">
+
+                    <a href="{{ url_for('create_offer') }}"
+                       class="text-decoration-none">
+
+                        <div class="border rounded p-4 text-center h-100">
+
+                            <div style="font-size: 35px;">
+                                ➕
+                            </div>
+
+                            <h6 class="mt-2">
+                                Publier une offre
+                            </h6>
+
+                            <p class="text-muted small mb-0">
+
+                                Créer une nouvelle offre de stage
+
+                            </p>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+
+                <!-- MES OFFRES -->
+
+                <div class="col-md-4">
+
+                    <a href="{{ url_for('recruiter_offers') }}"
+                       class="text-decoration-none">
+
+                        <div class="border rounded p-4 text-center h-100">
+
+                            <div style="font-size: 35px;">
+                                📢
+                            </div>
+
+                            <h6 class="mt-2">
+                                Mes offres
+                            </h6>
+
+                            <p class="text-muted small mb-0">
+
+                                Gérer vos offres de stage
+
+                            </p>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+
+                <!-- CANDIDATURES -->
+
+                <div class="col-md-4">
+
+                    <a href="{{ url_for('recruiter_applications') }}"
+                       class="text-decoration-none">
+
+                        <div class="border rounded p-4 text-center h-100">
+
+                            <div style="font-size: 35px;">
+                                👥
+                            </div>
+
+                            <h6 class="mt-2">
+                                Candidatures
+                            </h6>
+
+                            <p class="text-muted small mb-0">
+
+                                Consulter les candidatures reçues
+
+                            </p>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CONTENU PRINCIPAL
+    ========================== -->
+
+    <div class="row g-4">
+
+
+        <!-- =========================
+             DERNIERES OFFRES
+        ========================== -->
+
+        <div class="col-lg-7">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-4">
+
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                        <h5 class="fw-bold mb-0">
+                            📢 Mes dernières offres
+                        </h5>
+
+                        <a href=""
+                           class="btn btn-sm btn-outline-primary">
+
+                            Voir tout
+
+                        </a>
+
+                    </div>
+
+
+                    {% if offers %}
+
+                        <div class="table-responsive">
+
+                            <table class="table align-middle">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            Titre
+                                        </th>
+
+                                        <th>
+                                            Date
+                                        </th>
+
+                                        <th>
+                                            Statut
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    {% for offer in offers[:5] %}
+
+                                    <tr>
+
+                                        <td>
+
+                                            <strong>
+                                                {{ offer.titre }}
+                                            </strong>
+
+                                        </td>
+
+                                        <td>
+
+                                            {{ offer.date_publication }}
+
+                                        </td>
+
+                                        <td>
+
+                                            {% if offer.statut == "active" %}
+
+                                                <span class="badge bg-success">
+                                                    Active
+                                                </span>
+
+                                            {% elif offer.statut == "closed" %}
+
+                                                <span class="badge bg-secondary">
+                                                    Fermée
+                                                </span>
+
+                                            {% else %}
+
+                                                <span class="badge bg-warning text-dark">
+                                                    {{ offer.statut }}
+                                                </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+                                    </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="text-center py-5">
+
+                            <div style="font-size: 45px;">
+                                📢
+                            </div>
+
+                            <p class="text-muted mt-3">
+
+                                Vous n'avez pas encore publié d'offre.
+
+                            </p>
+
+                            <a href=""
+                               class="btn btn-primary">
+
+                                Publier ma première offre
+
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             DERNIERES CANDIDATURES
+        ========================== -->
+
+
+<div class="col-lg-5">
+
+    <div class="card border-0 shadow-sm h-100">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <h5 class="fw-bold mb-0">
+                    👥 Candidatures récentes
+                </h5>
+
+                <a href="{{ url_for('recruiter_applications') }}"
+                   class="btn btn-sm btn-outline-primary">
+
+                    Voir tout
+
+                </a>
+
+            </div>
+
+
+            {% if recent_applications %}
+
+                {% for item in recent_applications %}
+
+                    <div class="border-bottom py-3">
+
+                        <div class="d-flex justify-content-between">
+
+                            <div>
+
+                                <!-- NOM DU STUDENT -->
+
+                                <strong>
+
+                                    {% if item.user %}
+
+                                        {{ item.user.prenom }}
+                                        {{ item.user.nom }}
+
+                                    {% else %}
+
+                                        Candidat #{{ item.application.student_id }}
+
+                                    {% endif %}
+
+                                </strong>
+
+
+                                <!-- OFFRE -->
+
+                                <div class="text-muted small">
+
+                                    {% if item.offer %}
+
+                                        {{ item.offer.titre }}
+
+                                    {% else %}
+
+                                        Offre #{{ item.application.offer_id }}
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- STATUT -->
+
+                            {% if item.application.statut == "En attente" %}
+
+                                <span class="badge bg-warning text-dark">
+                                    En attente
+                                </span>
+
+                            {% elif item.application.statut == "Acceptée" %}
+
+                                <span class="badge bg-success">
+                                    Acceptée
+                                </span>
+
+                            {% elif item.application.statut == "Refusée" %}
+
+                                <span class="badge bg-danger">
+                                    Refusée
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+
+                                    {{ item.application.statut or "Non défini" }}
+
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+
+            {% else %}
+
+                <div class="text-center py-5">
+
+                    <div style="font-size: 45px;">
+                        👥
+                    </div>
+
+                    <p class="text-muted mt-3 mb-0">
+
+                        Aucune candidature reçue pour le moment.
+
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+</div>
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         INFORMATIONS ENTREPRISE
+    ========================== -->
+
+    <div class="card border-0 shadow-sm mt-4">
+
+        <div class="card-body p-4">
+
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <h5 class="fw-bold mb-0">
+                    🏢 Informations de l'entreprise
+                </h5>
+
+                <a href=""
+                   class="btn btn-sm btn-outline-primary">
+
+                    Modifier
+
+                </a>
+
+            </div>
+
+
+            <div class="row">
+
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>
+                        Entreprise
+                    </strong>
+
+                    <p class="text-muted mb-0">
+
+                        {% if recruiter %}
+                            {{ recruiter.nom_entreprise or "Non renseigné" }}
+                        {% else %}
+                            Non renseigné
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>
+                        Secteur
+                    </strong>
+
+                    <p class="text-muted mb-0">
+
+                        {% if recruiter %}
+                            {{ recruiter.secteur or "Non renseigné" }}
+                        {% else %}
+                            Non renseigné
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>
+                        Téléphone
+                    </strong>
+
+                    <p class="text-muted mb-0">
+
+                        {% if recruiter %}
+                            {{ recruiter.telephone or "Non renseigné" }}
+                        {% else %}
+                            Non renseigné
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>
+                        Adresse
+                    </strong>
+
+                    <p class="text-muted mb-0">
+
+                        {% if recruiter %}
+                            {{ recruiter.adresse or "Non renseigné" }}
+                        {% else %}
+                            Non renseigné
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

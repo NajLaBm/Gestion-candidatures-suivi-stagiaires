@@ -1,0 +1,31 @@
+{% extends 'base2.html' %}
+
+{% block title %}Message{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header">
+            💬 Message
+        </div>
+
+        <div class="card-body">
+
+            <p class="text-muted mb-2">
+                {{ message.date_envoi.strftime('%d/%m/%Y à %H:%M') }}
+            </p>
+
+            <div class="border rounded p-3">
+                {{ message.contenu }}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

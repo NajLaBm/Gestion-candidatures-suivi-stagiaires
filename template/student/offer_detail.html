@@ -1,0 +1,114 @@
+{% extends 'base2.html' %}
+
+{% block title %}
+Détail de l'offre
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-9">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <!-- TITRE -->
+
+                    <h2 class="fw-bold mb-3">
+                        {{ offer.titre }}
+                    </h2>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <h5 class="mt-4">
+                        Description
+                    </h5>
+
+                    <p class="text-muted">
+                        {{ offer.description }}
+                    </p>
+
+
+                    <!-- INFORMATIONS -->
+
+                    <hr>
+
+                    <h5 class="mb-3">
+                        Informations
+                    </h5>
+
+                    {% if offer.lieu %}
+                    <p>
+                        📍 <strong>Lieu :</strong>
+                        {{ offer.lieu }}
+                    </p>
+                    {% endif %}
+
+
+                    {% if offer.type_stage %}
+                    <p>
+                        💼 <strong>Type de stage :</strong>
+                        {{ offer.type_stage }}
+                    </p>
+                    {% endif %}
+
+
+                    {% if offer.duree %}
+                    <p>
+                        ⏱️ <strong>Durée :</strong>
+                        {{ offer.duree }}
+                    </p>
+                    {% endif %}
+
+
+                    {% if offer.date_debut %}
+                    <p>
+                        📅 <strong>Date de début :</strong>
+                        {{ offer.date_debut }}
+                    </p>
+                    {% endif %}
+
+
+                    <!-- ACTIONS -->
+
+                    <div class="mt-4">
+
+                        <a
+                            href="{{ url_for('student_offers') }}"
+                            class="btn btn-secondary">
+
+                            ← Retour aux offres
+
+                        </a>
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('apply_offer', offer_id=offer.id) }}"
+                                style="display:inline;">
+                            <button
+                            type="submit"
+                            class="btn btn-primary">
+
+                            📩 Postuler
+
+                        </button>
+                                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

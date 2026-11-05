@@ -1,0 +1,331 @@
+{% extends 'base2.html' %}
+
+{% block title %}
+Mon profil
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+
+            <!-- =========================
+                 CARTE PROFIL
+            ========================== -->
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4">
+
+
+                    <!-- TITRE -->
+
+                    <div class="mb-4">
+
+                        <h3>
+                            👤 Mon profil
+                        </h3>
+
+                        <p class="text-muted">
+                            Consultez et modifiez vos informations personnelles et académiques.
+                        </p>
+
+                    </div>
+
+
+                    <!-- =========================
+                         MESSAGES
+                    ========================== -->
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+
+                        {% if messages %}
+
+                            {% for category, message in messages %}
+
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    {% endwith %}
+
+
+                    <form method="POST">
+
+
+                        <!-- =========================
+                             INFORMATIONS PERSONNELLES
+                        ========================== -->
+
+                        <h5 class="mb-3">
+                            👤 Informations personnelles
+                        </h5>
+
+
+                        <!-- NOM -->
+
+                        <div class="mb-3">
+
+                            <label for="nom"
+                                   class="form-label">
+
+                                Nom
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="nom"
+                                name="nom"
+                                class="form-control"
+                                value="{{ user.nom or '' }}"
+                                required>
+
+                        </div>
+
+
+                        <!-- PRENOM -->
+
+                        <div class="mb-3">
+
+                            <label for="prenom"
+                                   class="form-label">
+
+                                Prénom
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="prenom"
+                                name="prenom"
+                                class="form-control"
+                                value="{{ user.prenom or '' }}"
+                                required>
+
+                        </div>
+
+
+                        <!-- EMAIL -->
+
+                        <div class="mb-3">
+
+                            <label for="email"
+                                   class="form-label">
+
+                                Email
+
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-control"
+                                value="{{ user.email or '' }}"
+                                required>
+
+                        </div>
+
+
+                        <hr class="my-4">
+
+
+                        <!-- =========================
+                             INFORMATIONS ETUDIANT
+                        ========================== -->
+
+                        <h5 class="mb-3">
+                            🎓 Informations académiques
+                        </h5>
+
+
+                        <!-- TELEPHONE -->
+
+                        <div class="mb-3">
+
+                            <label for="telephone"
+                                   class="form-label">
+
+                                Téléphone
+
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="telephone"
+                                name="telephone"
+                                class="form-control"
+                                value="{{ student.telephone or '' }}"
+                                placeholder="Ex : 22123456">
+
+                        </div>
+
+
+                        <!-- UNIVERSITE -->
+
+                        <div class="mb-3">
+
+                            <label for="universite"
+                                   class="form-label">
+
+                                Université / École
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="universite"
+                                name="universite"
+                                class="form-control"
+                                value="{{ student.universite or '' }}"
+                                placeholder="Ex : ESPRIT">
+
+                        </div>
+
+
+                        <!-- FORMATION -->
+
+                        <div class="mb-3">
+
+                            <label for="formation"
+                                   class="form-label">
+
+                                Formation
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="formation"
+                                name="formation"
+                                class="form-control"
+                                value="{{ student.formation or '' }}"
+                                placeholder="Ex : Génie Informatique">
+
+                        </div>
+
+
+                        <!-- NIVEAU -->
+
+                        <div class="mb-3">
+
+                            <label for="niveau"
+                                   class="form-label">
+
+                                Niveau d'études
+
+                            </label>
+
+                            <select
+                                id="niveau"
+                                name="niveau"
+                                class="form-select">
+
+                                <option value="">
+                                    -- Sélectionner --
+                                </option>
+
+                                <option value="Licence"
+                                    {% if student.niveau == "Licence" %}selected{% endif %}>
+                                    Licence
+                                </option>
+
+                                <option value="Master"
+                                    {% if student.niveau == "Master" %}selected{% endif %}>
+                                    Master
+                                </option>
+
+                                <option value="Cycle ingénieur"
+                                    {% if student.niveau == "Cycle ingénieur" %}selected{% endif %}>
+                                    Cycle ingénieur
+                                </option>
+
+                                <option value="Doctorat"
+                                    {% if student.niveau == "Doctorat" %}selected{% endif %}>
+                                    Doctorat
+                                </option>
+
+                                <option value="Autre"
+                                    {% if student.niveau == "Autre" %}selected{% endif %}>
+                                    Autre
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- COMPETENCES -->
+
+                        <div class="mb-4">
+
+                            <label for="competences"
+                                   class="form-label">
+
+                                Compétences
+
+                            </label>
+
+                            <textarea
+                                id="competences"
+                                name="competences"
+                                class="form-control"
+                                rows="4"
+                                placeholder="Ex : Python, SQL, Flask, Power BI...">{{ student.competences or '' }}</textarea>
+
+                            <small class="text-muted">
+                                Indiquez vos principales compétences.
+                            </small>
+
+                        </div>
+
+
+                        <!-- =========================
+                             BOUTONS
+                        ========================== -->
+
+                        <div class="d-flex gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary">
+
+                                💾 Enregistrer les modifications
+
+                            </button>
+
+
+                            <a
+                                href="{{ url_for('student_dashboard') }}"
+                                class="btn btn-secondary">
+
+                                Retour
+
+                            </a>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

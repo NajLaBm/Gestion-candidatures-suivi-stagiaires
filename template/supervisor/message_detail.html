@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Message{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">💬 Message</h5>
+        </div>
+
+        <div class="card-body">
+
+            <p class="text-muted mb-3">
+                {{ message.date_envoi.strftime('%d/%m/%Y à %H:%M') }}
+            </p>
+
+            <div class="border rounded p-3 bg-light">
+                {{ message.contenu }}
+            </div>
+
+            <div class="mt-4">
+                <a href="{{ url_for('supervisor_notifications') }}"
+                   class="btn btn-secondary">
+                    ← Retour aux notifications
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

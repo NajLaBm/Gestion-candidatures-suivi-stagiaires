@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>🔔 Notifications</h2>
+
+        <a href="{{ url_for('supervisor_notifications') }}"
+           class="btn btn-primary">
+            💬 Notifications
+        </a>
+    </div>
+
+    {% if notifications %}
+
+        <div class="list-group">
+
+            {% for notification in notifications %}
+
+                <a href="{{ url_for(
+                    'supervisor_notification_detail',
+                    notification_id=notification.id
+                ) }}"
+                   class="list-group-item list-group-item-action
+                   {% if not notification.lu %}fw-bold{% endif %}">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            {% if not notification.lu %}
+                                <span class="badge bg-danger me-2">
+                                    Nouveau
+                                </span>
+                            {% endif %}
+
+                            🔔 {{ notification.message }}
+
+                        </div>
+
+                        <small class="text-muted">
+                            {{ notification.date_creation.strftime('%d/%m/%Y %H:%M') }}
+                        </small>
+
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-info">
+            Vous n'avez aucune notification pour le moment.
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

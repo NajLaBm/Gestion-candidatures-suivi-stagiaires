@@ -1,0 +1,50 @@
+{% extends 'base2.html' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <h2 class="mb-4">🔔 Notifications</h2>
+
+    {% if notifications %}
+
+        <div class="list-group">
+
+            {% for notification in notifications %}
+
+                <a href="{{ url_for('student_notification_detail', notification_id=notification.id) }}"
+                   class="list-group-item list-group-item-action
+                   {% if not notification.lu %}fw-bold{% endif %}">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <span>🔔</span>
+                            {{ notification.message }}
+                        </div>
+
+                        <small class="text-muted">
+                            {{ notification.date_creation.strftime('%d/%m/%Y %H:%M') }}
+                        </small>
+
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-info">
+            Vous n'avez aucune notification pour le moment.
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,826 @@
+{% extends 'basee.html' %}
+
+{% block content %}
+
+<style>
+
+    body {
+        background-color: #f5f7fb;
+    }
+
+    .register-container {
+        max-width: 750px;
+        margin: 40px auto;
+    }
+
+    .register-card {
+        background: white;
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .title {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .role-card {
+        cursor: pointer;
+        border: 2px solid #ddd;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: 0.3s;
+    }
+
+    .role-card:hover {
+        border-color: #0d6efd;
+        background-color: #f8fbff;
+    }
+
+    .role-card.selected {
+        border-color: #0d6efd;
+        background-color: #eef5ff;
+    }
+
+    .role-icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .section-title {
+        margin-top: 25px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 8px;
+    }
+
+</style>
+
+
+<div class="container register-container">
+
+    <div class="register-card">
+
+        <!-- =========================
+             TITRE
+        ========================== -->
+
+        <div class="title">
+
+            <h2>Créer un compte</h2>
+
+            <p class="text-muted">
+                Rejoignez la plateforme de gestion des stages
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             MESSAGES FLASK
+        ========================== -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- =========================
+             CHOIX DU ROLE
+        ========================== -->
+
+        <div class="mb-4">
+
+            <label class="form-label fw-bold">
+                Je suis :
+            </label>
+
+            <div class="row g-3">
+
+
+                <!-- =====================
+                     STUDENT
+                ====================== -->
+
+                <div class="col-md-4">
+
+                    <div class="role-card"
+                         onclick="selectRole('student', this)">
+
+                        <div class="role-icon">
+                            🎓
+                        </div>
+
+                        <h5>
+                            Stagiaire
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Je recherche un stage
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================
+                     RECRUITER
+                ====================== -->
+
+                <div class="col-md-4">
+
+                    <div class="role-card"
+                         onclick="selectRole('recruiter', this)">
+
+                        <div class="role-icon">
+                            🏢
+                        </div>
+
+                        <h5>
+                            Recruteur
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Je recherche des stagiaires
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================
+                     SUPERVISOR
+                ====================== -->
+
+                <div class="col-md-4">
+
+                    <div class="role-card"
+                         onclick="selectRole('supervisor', this)">
+
+                        <div class="role-icon">
+                            👨‍🏫
+                        </div>
+
+                        <h5>
+                            Encadrant
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            J'encadre des stagiaires
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             FORMULAIRE
+        ========================== -->
+
+        <form method="POST"
+              action="{{ url_for('register') }}"
+              id="registerForm">
+
+
+            <!-- ROLE -->
+
+            <input type="hidden"
+                   name="role"
+                   id="role">
+
+
+            <!-- =========================
+                 INFORMATIONS USER
+            ========================== -->
+
+            <h5 class="section-title">
+                Informations personnelles
+            </h5>
+
+
+            <div class="row">
+
+
+                <!-- NOM -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label for="nom"
+                           class="form-label">
+
+                        Nom
+
+                    </label>
+
+                    <input type="text"
+                           id="nom"
+                           name="nom"
+                           class="form-control"
+                           placeholder="Votre nom"
+                           required>
+
+                </div>
+
+
+                <!-- PRENOM -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label for="prenom"
+                           class="form-label">
+
+                        Prénom
+
+                    </label>
+
+                    <input type="text"
+                           id="prenom"
+                           name="prenom"
+                           class="form-control"
+                           placeholder="Votre prénom"
+                           required>
+
+                </div>
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="mb-3">
+
+                <label for="email"
+                       class="form-label">
+
+                    Email
+
+                </label>
+
+                <input type="email"
+                       id="email"
+                       name="email"
+                       class="form-control"
+                       placeholder="exemple@email.com"
+                       required>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="mb-3">
+
+                <label for="password"
+                       class="form-label">
+
+                    Mot de passe
+
+                </label>
+
+                <input type="password"
+                       id="password"
+                       name="password"
+                       class="form-control"
+                       placeholder="Votre mot de passe"
+                       required>
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="mb-3">
+
+                <label for="confirm_password"
+                       class="form-label">
+
+                    Confirmer le mot de passe
+
+                </label>
+
+                <input type="password"
+                       id="confirm_password"
+                       name="confirm_password"
+                       class="form-control"
+                       placeholder="Confirmez votre mot de passe"
+                       required>
+
+            </div>
+
+
+            <!-- =====================================================
+                 INFORMATIONS STUDENT
+            ====================================================== -->
+
+            <div id="studentFields"
+                 class="hidden">
+
+                <hr>
+
+                <h5 class="section-title">
+                    Informations du stagiaire
+                </h5>
+
+
+                <!-- TELEPHONE -->
+
+                <div class="mb-3">
+
+                    <label for="telephone"
+                           class="form-label">
+
+                        Téléphone
+
+                    </label>
+
+                    <input type="tel"
+                           id="telephone"
+                           name="telephone"
+                           class="form-control"
+                           placeholder="Ex : 22123456">
+
+                </div>
+
+
+                <!-- UNIVERSITE -->
+
+                <div class="mb-3">
+
+                    <label for="universite"
+                           class="form-label">
+
+                        Université / École
+
+                    </label>
+
+                    <input type="text"
+                           id="universite"
+                           name="universite"
+                           class="form-control"
+                           placeholder="Ex : ESPRIT">
+
+                </div>
+
+
+                <!-- FORMATION -->
+
+                <div class="mb-3">
+
+                    <label for="formation"
+                           class="form-label">
+
+                        Formation
+
+                    </label>
+
+                    <input type="text"
+                           id="formation"
+                           name="formation"
+                           class="form-control"
+                           placeholder="Ex : Génie Informatique">
+
+                </div>
+
+
+                <!-- NIVEAU -->
+
+                <div class="mb-3">
+
+                    <label for="niveau"
+                           class="form-label">
+
+                        Niveau d'études
+
+                    </label>
+
+                    <select id="niveau"
+                            name="niveau"
+                            class="form-select">
+
+                        <option value="">
+                            -- Sélectionner --
+                        </option>
+
+                        <option value="Licence">
+                            Licence
+                        </option>
+
+                        <option value="Master">
+                            Master
+                        </option>
+
+                        <option value="Cycle ingénieur">
+                            Cycle ingénieur
+                        </option>
+
+                        <option value="Doctorat">
+                            Doctorat
+                        </option>
+
+                        <option value="Autre">
+                            Autre
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- COMPETENCES -->
+
+                <div class="mb-3">
+
+                    <label for="competences"
+                           class="form-label">
+
+                        Compétences
+
+                    </label>
+
+                    <textarea id="competences"
+                              name="competences"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Ex : Python, SQL, Flask, Power BI"></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 INFORMATIONS RECRUTEUR
+            ====================================================== -->
+
+            <div id="recruiterFields"
+                 class="hidden">
+
+                <hr>
+
+                <h5 class="section-title">
+                    Informations de l'entreprise
+                </h5>
+
+
+                <!-- NOM ENTREPRISE -->
+
+                <div class="mb-3">
+
+                    <label for="nom_entreprise"
+                           class="form-label">
+
+                        Nom de l'entreprise
+
+                    </label>
+
+                    <input type="text"
+                           id="nom_entreprise"
+                           name="nom_entreprise"
+                           class="form-control"
+                           placeholder="Nom de l'entreprise">
+
+                </div>
+
+
+                <!-- SECTEUR -->
+
+                <div class="mb-3">
+
+                    <label for="secteur"
+                           class="form-label">
+
+                        Secteur d'activité
+
+                    </label>
+
+                    <input type="text"
+                           id="secteur"
+                           name="secteur"
+                           class="form-control"
+                           placeholder="Ex : Informatique">
+
+                </div>
+
+
+                <!-- TELEPHONE -->
+
+                <div class="mb-3">
+
+                    <label for="telephone_entreprise"
+                           class="form-label">
+
+                        Téléphone
+
+                    </label>
+
+                    <input type="tel"
+                           id="telephone_entreprise"
+                           name="telephone_entreprise"
+                           class="form-control"
+                           placeholder="Ex : 71123456">
+
+                </div>
+
+
+                <!-- ADRESSE -->
+
+                <div class="mb-3">
+
+                    <label for="adresse"
+                           class="form-label">
+
+                        Adresse
+
+                    </label>
+
+                    <input type="text"
+                           id="adresse"
+                           name="adresse"
+                           class="form-control"
+                           placeholder="Adresse de l'entreprise">
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="mb-3">
+
+                    <label for="description"
+                           class="form-label">
+
+                        Description
+
+                    </label>
+
+                    <textarea id="description"
+                              name="description"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Description de l'entreprise"></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 INFORMATIONS SUPERVISOR
+            ====================================================== -->
+
+            <div id="supervisorFields"
+                 class="hidden">
+
+                <hr>
+
+                <h5 class="section-title">
+                    Informations de l'encadrant
+                </h5>
+
+
+                <!-- TELEPHONE -->
+
+                <div class="mb-3">
+
+                    <label for="telephone_supervisor"
+                           class="form-label">
+
+                        Téléphone
+
+                    </label>
+
+                    <input type="tel"
+                           id="telephone_supervisor"
+                           name="telephone_supervisor"
+                           class="form-control"
+                           placeholder="Ex : 22123456">
+
+                </div>
+
+
+                <!-- SPECIALITE -->
+
+                <div class="mb-3">
+
+                    <label for="specialite"
+                           class="form-label">
+
+                        Spécialité
+
+                    </label>
+
+                    <input type="text"
+                           id="specialite"
+                           name="specialite"
+                           class="form-control"
+                           placeholder="Ex : Data Science, Développement Web">
+
+                </div>
+
+
+                <!-- FONCTION -->
+
+                <div class="mb-3">
+
+                    <label for="fonction"
+                           class="form-label">
+
+                        Fonction
+
+                    </label>
+
+                    <input type="text"
+                           id="fonction"
+                           name="fonction"
+                           class="form-control"
+                           placeholder="Ex : Responsable technique">
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 BOUTON
+            ========================== -->
+
+            <button type="submit"
+                    class="btn btn-primary w-100 mt-3">
+
+                Créer mon compte
+
+            </button>
+
+        </form>
+
+
+        <!-- =========================
+             LOGIN
+        ========================== -->
+
+        <div class="text-center mt-4">
+
+            <p>
+
+                Vous avez déjà un compte ?
+
+                <a href="{{ url_for('logininterface') }}">
+                    Se connecter
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+<script>
+
+function selectRole(role, element) {
+
+    // Enregistrer le rôle
+    document.getElementById("role").value = role;
+
+
+    // Retirer la sélection précédente
+    document.querySelectorAll(".role-card").forEach(function(card) {
+
+        card.classList.remove("selected");
+
+    });
+
+
+    // Sélectionner la carte actuelle
+    element.classList.add("selected");
+
+
+    // Récupérer les sections
+    const studentFields =
+        document.getElementById("studentFields");
+
+    const recruiterFields =
+        document.getElementById("recruiterFields");
+
+    const supervisorFields =
+        document.getElementById("supervisorFields");
+
+
+    // Masquer toutes les sections
+    studentFields.classList.add("hidden");
+
+    recruiterFields.classList.add("hidden");
+
+    supervisorFields.classList.add("hidden");
+
+
+    // Afficher la bonne section
+
+    if (role === "student") {
+
+        studentFields.classList.remove("hidden");
+
+    }
+
+    else if (role === "recruiter") {
+
+        recruiterFields.classList.remove("hidden");
+
+    }
+
+    else if (role === "supervisor") {
+
+        supervisorFields.classList.remove("hidden");
+
+    }
+
+}
+
+
+// Vérification avant l'envoi
+
+document.getElementById("registerForm").addEventListener(
+    "submit",
+    function(event) {
+
+        const role =
+            document.getElementById("role").value;
+
+
+        // Aucun rôle sélectionné
+
+        if (!role) {
+
+            event.preventDefault();
+
+            alert(
+                "Veuillez sélectionner votre type de compte."
+            );
+
+            return;
+
+        }
+
+
+        // Vérification mot de passe
+
+        const password =
+            document.getElementById("password").value;
+
+        const confirmPassword =
+            document.getElementById("confirm_password").value;
+
+
+        if (password !== confirmPassword) {
+
+            event.preventDefault();
+
+            alert(
+                "Les mots de passe ne correspondent pas."
+            );
+
+            return;
+
+        }
+
+    }
+);
+
+</script>
+
+{% endblock %}

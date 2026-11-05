@@ -1,0 +1,64 @@
+body {
+    background-color: #f5f7fb;
+    font-family: Arial, sans-serif;
+}
+
+
+/* Dashboard */
+
+.dashboard-container {
+    padding: 30px;
+}
+
+.welcome {
+    margin-bottom: 30px;
+}
+
+
+/* Cartes statistiques */
+
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    height: 100%;
+}
+
+.stat-icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+
+/* Cartes menu */
+
+.menu-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    height: 100%;
+    transition: 0.3s;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
+}
+
+.menu-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.menu-card a {
+    text-decoration: none;
+    color: #333;
+}

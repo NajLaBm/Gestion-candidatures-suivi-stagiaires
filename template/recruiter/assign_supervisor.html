@@ -1,0 +1,118 @@
+
+{% extends 'base2.html' %}
+
+{% block title %}
+Affecter un encadrant
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-7">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h3 class="mb-4">
+                        👨‍🏫 Affecter un encadrant
+                    </h3>
+
+                    <p class="text-muted">
+                        Vous êtes sur le point d'accepter cette candidature.
+                        Veuillez choisir l'encadrant qui suivra le stagiaire.
+                    </p>
+
+                    <hr>
+
+                    <h5>
+                        📄 Informations de la candidature
+                    </h5>
+
+                    <p>
+                        <strong>Candidature :</strong>
+                        #{{ application.id }}
+                    </p>
+
+                    <p>
+                        <strong>Offre :</strong>
+                        {{ offer.titre }}
+                    </p>
+
+                    <hr>
+
+                    <form method="POST"
+                          action="{{ url_for('accept_application', application_id=application.id) }}">
+
+                        <div class="mb-4">
+
+                            <label for="supervisor_id"
+                                   class="form-label fw-bold">
+
+                                👨‍🏫 Choisir un encadrant
+
+                            </label>
+
+                            <select name="supervisor_id"
+                                    id="supervisor_id"
+                                    class="form-select"
+                                    required>
+
+                                <option value="">
+                                    -- Sélectionner un encadrant --
+                                </option>
+
+                                {% for supervisor in supervisors %}
+
+                                    <option value="{{ supervisor.id }}">
+
+                                        {% if supervisor.user %}
+                                            {{ supervisor.user.prenom }}
+                                            {{ supervisor.user.nom }}
+                                        {% else %}
+                                            Encadrant #{{ supervisor.id }}
+                                        {% endif %}
+
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="d-flex gap-2">
+
+                            <a href="{{ url_for('recruiter_applications') }}"
+                               class="btn btn-secondary">
+
+                                ← Annuler
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-success">
+
+                                ✅ Accepter et affecter
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

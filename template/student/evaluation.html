@@ -1,0 +1,511 @@
+{% extends 'base2.html' %}
+
+{% block title %}
+Mon évaluation de stage
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+<!-- =====================================================
+     EN-TÊTE
+====================================================== -->
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="fw-bold">
+            ⭐ Mon évaluation de stage
+        </h2>
+
+        <p class="text-muted mb-0">
+            Consultez l'évaluation réalisée par votre encadrant.
+        </p>
+    </div>
+
+    <a href="{{ url_for('student_dashboard') }}"
+       class="btn btn-secondary">
+        ← Retour
+    </a>
+
+</div>
+
+
+<!-- =====================================================
+     INFORMATIONS DU STAGIAIRE
+====================================================== -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body p-4">
+
+        <h5 class="fw-bold mb-4">
+            👤 Informations du stagiaire
+        </h5>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Nom et prénom :</strong>
+
+                <br>
+
+               {% if user %}
+
+    {{ user.prenom }} {{ user.nom }}
+
+{% else %}
+
+    Non disponible
+
+{% endif %}
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Formation :</strong>
+
+                <br>
+
+                {{ student.formation or "Non renseignée" }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Niveau :</strong>
+
+                <br>
+
+                {{ student.niveau or "Non renseigné" }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Université :</strong>
+
+                <br>
+
+                {{ student.universite or "Non renseignée" }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     INFORMATIONS DU STAGE
+====================================================== -->
+
+{% if internship %}
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body p-4">
+
+        <h5 class="fw-bold mb-4">
+            🎓 Informations du stage
+        </h5>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Intitulé :</strong>
+
+                <br>
+
+                {{ internship.titre or "Stage" }}
+
+            </div>
+
+
+            <div class="col-md-3 mb-3">
+
+                <strong>Date de début :</strong>
+
+                <br>
+
+                {% if internship.date_debut %}
+
+                    {{ internship.date_debut.strftime('%d/%m/%Y') }}
+
+                {% else %}
+
+                    Non définie
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="col-md-3 mb-3">
+
+                <strong>Date de fin :</strong>
+
+                <br>
+
+                {% if internship.date_fin %}
+
+                    {{ internship.date_fin.strftime('%d/%m/%Y') }}
+
+                {% else %}
+
+                    Non définie
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+<!-- =====================================================
+     ÉVALUATION
+====================================================== -->
+
+{% if evaluation %}
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h5 class="fw-bold mb-0">
+                ⭐ Évaluation du stage
+            </h5>
+
+            <span class="badge bg-success fs-6">
+                Évaluation disponible
+            </span>
+
+        </div>
+
+
+        <!-- NOTES -->
+
+        <div class="row g-4">
+
+            <!-- TECHNIQUE -->
+
+            <div class="col-md-6">
+
+                <div class="evaluation-card">
+
+                    <div class="d-flex justify-content-between">
+
+                        <span>
+                            💻 Compétences techniques
+                        </span>
+
+                        <strong>
+                            {{ evaluation.note_technique or 0 }}/20
+                        </strong>
+
+                    </div>
+
+                    <div class="progress mt-2"
+                         style="height: 10px;">
+
+                        <div class="progress-bar"
+                             role="progressbar"
+                             style="width: {{ ((evaluation.note_technique or 0) / 20 * 100) }}%;">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TRAVAIL -->
+
+            <div class="col-md-6">
+
+                <div class="evaluation-card">
+
+                    <div class="d-flex justify-content-between">
+
+                        <span>
+                            📚 Qualité du travail
+                        </span>
+
+                        <strong>
+                            {{ evaluation.note_travail or 0 }}/20
+                        </strong>
+
+                    </div>
+
+                    <div class="progress mt-2"
+                         style="height: 10px;">
+
+                        <div class="progress-bar"
+                             role="progressbar"
+                             style="width: {{ ((evaluation.note_travail or 0) / 20 * 100) }}%;">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMPORTEMENT -->
+
+            <div class="col-md-6">
+
+                <div class="evaluation-card">
+
+                    <div class="d-flex justify-content-between">
+
+                        <span>
+                            🤝 Comportement professionnel
+                        </span>
+
+                        <strong>
+                            {{ evaluation.note_comportement or 0 }}/20
+                        </strong>
+
+                    </div>
+
+                    <div class="progress mt-2"
+                         style="height: 10px;">
+
+                        <div class="progress-bar"
+                             role="progressbar"
+                             style="width: {{ ((evaluation.note_comportement or 0) / 20 * 100) }}%;">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ASSIDUITE -->
+
+            <div class="col-md-6">
+
+                <div class="evaluation-card">
+
+                    <div class="d-flex justify-content-between">
+
+                        <span>
+                            ⏰ Assiduité
+                        </span>
+
+                        <strong>
+                            {{ evaluation.note_assiduite or 0 }}/20
+                        </strong>
+
+                    </div>
+
+                    <div class="progress mt-2"
+                         style="height: 10px;">
+
+                        <div class="progress-bar"
+                             role="progressbar"
+                             style="width: {{ ((evaluation.note_assiduite or 0) / 20 * 100) }}%;">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             NOTE FINALE
+        ================================================== -->
+
+        <div class="final-note mt-5">
+
+            <p class="text-muted mb-1">
+                Note finale
+            </p>
+
+            <h1 class="fw-bold">
+
+                {{ evaluation.note_finale or 0 }}
+
+                <small>/20</small>
+
+            </h1>
+
+            {% if evaluation.note_finale is not none %}
+
+                {% if evaluation.note_finale >= 16 %}
+
+                    <span class="badge bg-success">
+                        Excellent
+                    </span>
+
+                {% elif evaluation.note_finale >= 14 %}
+
+                    <span class="badge bg-primary">
+                        Très bien
+                    </span>
+
+                {% elif evaluation.note_finale >= 10 %}
+
+                    <span class="badge bg-warning text-dark">
+                        Validé
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-danger">
+                        À améliorer
+                    </span>
+
+                {% endif %}
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =================================================
+             COMMENTAIRE
+        ================================================== -->
+
+        {% if evaluation.commentaire %}
+
+        <div class="alert alert-light border mt-4">
+
+            <h6 class="fw-bold">
+                💬 Commentaire de l'encadrant
+            </h6>
+
+            <p class="mb-0">
+                {{ evaluation.commentaire }}
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             PDF
+        ================================================== -->
+
+        <div class="text-center mt-4">
+
+            <a href="{{ url_for(
+                'student_evaluation_pdf',
+                internship_id=internship.id
+            ) }}"
+               class="btn btn-danger btn-lg">
+
+                📄 Télécharger le rapport PDF
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% else %}
+
+<!-- =====================================================
+     AUCUNE ÉVALUATION
+====================================================== -->
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-body text-center py-5">
+
+        <div style="font-size: 60px;">
+            ⭐
+        </div>
+
+        <h4 class="mt-3">
+            Évaluation non disponible
+        </h4>
+
+        <p class="text-muted">
+
+            Votre encadrant n'a pas encore effectué
+            votre évaluation de stage.
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+</div>
+
+<style>
+
+.evaluation-card {
+
+    background: #f8f9fa;
+
+    border-radius: 12px;
+
+    padding: 18px;
+
+}
+
+.final-note {
+
+    text-align: center;
+
+    background: #f8f9fa;
+
+    border-radius: 15px;
+
+    padding: 25px;
+
+}
+
+.final-note h1 {
+
+    font-size: 45px;
+
+}
+
+.card {
+
+    border-radius: 15px;
+
+}
+
+</style>
+
+{% endblock %}

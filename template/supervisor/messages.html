@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Messages
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- Titre -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">
+                💬 Messages
+            </h2>
+
+            <p class="text-muted mb-0">
+                Discussions avec vos stagiaires
+            </p>
+        </div>
+    </div>
+
+
+    {% if conversations %}
+
+        <div class="card shadow-sm">
+
+            <div class="list-group list-group-flush">
+
+                {% for conversation in conversations %}
+
+                    <a href="{{ url_for(
+                        'supervisor_chat',
+                        internship_id=conversation.internship.id
+                    ) }}"
+                       class="list-group-item list-group-item-action py-3">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <!-- Informations du stagiaire -->
+                            <div class="d-flex align-items-center">
+
+                                <!-- Avatar -->
+                                <div class="rounded-circle bg-primary text-white
+                                            d-flex align-items-center justify-content-center me-3"
+                                     style="width: 50px; height: 50px;">
+
+                                    {{ conversation.student_user.prenom[0] | upper }}
+
+                                </div>
+
+
+                                <div>
+
+                                    <h5 class="mb-1">
+
+                                        {{ conversation.student_user.prenom }}
+                                        {{ conversation.student_user.nom }}
+
+                                    </h5>
+
+
+                                    <!-- Dernier message -->
+                                    {% if conversation.last_message %}
+
+                                        <p class="text-muted mb-0">
+
+                                            {% if conversation.last_message.sender_id == session.get("user_id") %}
+                                                <strong>Vous :</strong>
+                                            {% endif %}
+
+                                            {{ conversation.last_message.contenu[:70] }}
+
+                                            {% if conversation.last_message.contenu|length > 70 %}
+                                                ...
+                                            {% endif %}
+
+                                        </p>
+
+                                    {% else %}
+
+                                        <p class="text-muted mb-0">
+                                            Aucun message pour le moment.
+                                        </p>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Partie droite -->
+                            <div class="text-end">
+
+                                {% if conversation.last_message %}
+
+                                    <small class="text-muted d-block mb-2">
+
+                                        {{ conversation.last_message.date_envoi.strftime('%d/%m/%Y %H:%M') }}
+
+                                    </small>
+
+                                {% endif %}
+
+
+                                <!-- Nombre de messages non lus -->
+                                {% if conversation.unread_count > 0 %}
+
+                                    <span class="badge bg-danger rounded-pill">
+
+                                        {{ conversation.unread_count }}
+
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+    {% else %}
+
+        <!-- Aucun stagiaire -->
+        <div class="alert alert-info text-center py-4">
+
+            <div style="font-size: 45px;">
+                💬
+            </div>
+
+            <h5 class="mt-3">
+                Aucune conversation
+            </h5>
+
+            <p class="mb-0">
+                Vous n'avez pas encore de conversation avec vos stagiaires.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

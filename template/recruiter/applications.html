@@ -1,0 +1,666 @@
+{% extends 'base2.html' %}
+
+{% block title %}
+Candidatures reçues
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2>
+                👥 Candidatures reçues
+            </h2>
+
+            <p class="text-muted mb-0">
+                Consultez et gérez les candidatures reçues pour vos offres de stage.
+            </p>
+
+        </div>
+
+
+        <a href="{{ url_for('recruiter_dashboard') }}"
+           class="btn btn-secondary">
+
+            ← Retour
+
+        </a>
+
+    </div>
+
+
+
+    <!-- =========================
+         RECHERCHE ET FILTRES
+    ========================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="GET"
+                  action="{{ url_for('recruiter_applications') }}">
+
+                <div class="row g-3 align-items-end">
+
+
+                    <!-- =========================
+                         RECHERCHE CANDIDAT
+                    ========================== -->
+
+                    <div class="col-md-5">
+
+                        <label class="form-label fw-bold">
+
+                            🔎 Rechercher un candidat
+
+                        </label>
+
+                        <input type="text"
+                               name="search"
+                               class="form-control"
+                               placeholder="Nom, prénom ou email..."
+                               value="{{ search or '' }}">
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         FILTRE OFFRE
+                    ========================== -->
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-bold">
+
+                            📄 Offre
+
+                        </label>
+
+                        <select name="offer_id"
+                                class="form-select">
+
+                            <option value="">
+
+                                Toutes les offres
+
+                            </option>
+
+
+                            {% for offer in offers %}
+
+                                <option value="{{ offer.id }}"
+
+                                    {% if offer_id|string == offer.id|string %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ offer.titre }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         FILTRE STATUT
+                    ========================== -->
+
+                    <div class="col-md-2">
+
+                        <label class="form-label fw-bold">
+
+                            📌 Statut
+
+                        </label>
+
+                        <select name="statut"
+                                class="form-select">
+
+
+                            <option value="">
+
+                                Tous
+
+                            </option>
+
+
+                            <option value="En attente"
+
+                                {% if statut == "En attente" %}
+                                    selected
+                                {% endif %}>
+
+                                En attente
+
+                            </option>
+
+
+                            <option value="Acceptée"
+
+                                {% if statut == "Acceptée" %}
+                                    selected
+                                {% endif %}>
+
+                                Acceptée
+
+                            </option>
+
+
+                            <option value="Refusée"
+
+                                {% if statut == "Refusée" %}
+                                    selected
+                                {% endif %}>
+
+                                Refusée
+
+                            </option>
+
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         BOUTON RECHERCHER
+                    ========================== -->
+
+                    <div class="col-md-2">
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+
+                            🔎 Rechercher
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================
+                     REINITIALISER
+                ========================== -->
+
+                {% if search or statut or offer_id %}
+
+                    <div class="mt-3">
+
+                        <a href="{{ url_for('recruiter_applications') }}"
+                           class="btn btn-outline-secondary btn-sm">
+
+                            ↻ Réinitialiser les filtres
+
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         RESULTATS
+    ========================== -->
+
+    {% if applications %}
+
+
+        <div class="row g-4">
+
+
+            {% for item in applications %}
+
+
+                {% set application = item.application %}
+                {% set student = item.student %}
+                {% set student_user = item.student_user %}
+
+
+                <!-- =========================
+                     CARTE CANDIDATURE
+                ========================== -->
+
+                <div class="col-md-6">
+
+                    <div class="card border-0 shadow-sm h-100">
+
+                        <div class="card-body p-4">
+
+
+                            <!-- =========================
+                                 INFORMATIONS CANDIDAT
+                            ========================== -->
+
+                            <div class="d-flex align-items-center mb-3">
+
+
+                                <!-- Avatar -->
+
+                                <div class="rounded-circle bg-primary text-white
+                                            d-flex align-items-center
+                                            justify-content-center me-3"
+                                     style="width:55px;
+                                            height:55px;
+                                            font-size:21px;">
+
+                                    {{ student_user.prenom[0] | upper }}
+
+                                </div>
+
+
+                                <!-- Nom et email -->
+
+                                <div>
+
+                                    <h5 class="mb-1">
+
+                                        {{ student_user.prenom }}
+                                        {{ student_user.nom }}
+
+                                    </h5>
+
+
+                                    <small class="text-muted">
+
+                                        {{ student_user.email }}
+
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+                            <hr>
+
+
+                            <!-- =========================
+                                 NUMERO CANDIDATURE
+                            ========================== -->
+
+                            <h6 class="mb-3">
+
+                                📄 Candidature #{{ application.id }}
+
+                            </h6>
+
+
+
+                            <!-- =========================
+                                 OFFRE
+                            ========================== -->
+
+                            <p class="mb-2">
+
+                                <strong>
+
+                                    Offre :
+
+                                </strong>
+
+
+                                {% if application.offer %}
+
+                                    {{ application.offer.titre }}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+
+                                        Offre inconnue
+
+                                    </span>
+
+                                {% endif %}
+
+                            </p>
+
+
+
+                            <!-- =========================
+                                 STATUT
+                            ========================== -->
+
+                            <p class="mb-2">
+
+                                <strong>
+
+                                    Statut :
+
+                                </strong>
+
+
+                                {% if application.statut == "En attente" %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        En attente
+
+                                    </span>
+
+
+                                {% elif application.statut == "Acceptée" %}
+
+                                    <span class="badge bg-success">
+
+                                        Acceptée
+
+                                    </span>
+
+
+                                {% elif application.statut == "Refusée" %}
+
+                                    <span class="badge bg-danger">
+
+                                        Refusée
+
+                                    </span>
+
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+
+                                        {{ application.statut or "Non défini" }}
+
+                                    </span>
+
+                                {% endif %}
+
+                            </p>
+
+
+
+                            <!-- =========================
+                                 DATE
+                            ========================== -->
+
+                            <p class="mb-3">
+
+                                <strong>
+
+                                    Date de candidature :
+
+                                </strong>
+
+
+                                {% if application.date_candidature %}
+
+                                    {{ application.date_candidature.strftime(
+                                        '%d/%m/%Y %H:%M'
+                                    ) }}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+
+                                        Non définie
+
+                                    </span>
+
+                                {% endif %}
+
+                            </p>
+
+
+
+                            <!-- =========================
+                                 ACTIONS
+                            ========================== -->
+
+                            <div class="d-flex flex-wrap gap-2">
+
+
+                                <!-- =========================
+                                     VOIR CV
+                                ========================== -->
+
+                                {% if application.cv %}
+
+                                    <a href="{{ url_for(
+                                        'recruiter_cv',
+                                        filename=application.cv
+                                    ) }}"
+                                       target="_blank"
+                                       class="btn btn-outline-primary btn-sm">
+
+                                        📄 Voir le CV
+
+                                    </a>
+
+                                {% else %}
+
+                                    <span class="text-muted small">
+
+                                        Aucun CV
+
+                                    </span>
+
+                                {% endif %}
+
+
+
+                                <!-- =========================
+                                     LETTRE DE MOTIVATION
+                                ========================== -->
+
+                                {% if application.lettre_motivation %}
+
+                                    <a href="{{ url_for(
+                                        'application_letter_file',
+                                        filename=application.lettre_motivation
+                                    ) }}"
+                                       target="_blank"
+                                       class="btn btn-outline-secondary btn-sm">
+
+                                        📝 Lettre de motivation
+
+                                    </a>
+
+                                {% endif %}
+
+
+
+                                <!-- =========================
+                                     CANDIDATURE EN ATTENTE
+                                ========================== -->
+
+                                {% if application.statut == "En attente" %}
+
+
+                                    <!-- ACCEPTER -->
+
+                                    <form method="POST"
+                                          action="{{ url_for(
+                                              'accept_application',
+                                              application_id=application.id
+                                          ) }}"
+                                          class="d-inline">
+
+                                        <button type="submit"
+                                                class="btn btn-success btn-sm"
+                                                onclick="return confirm(
+                                                    'Voulez-vous accepter cette candidature ?'
+                                                );">
+
+                                            ✅ Accepter
+
+                                        </button>
+
+                                    </form>
+
+
+
+                                    <!-- REFUSER -->
+
+                                    <form method="POST"
+                                          action="{{ url_for(
+                                              'reject_application',
+                                              application_id=application.id
+                                          ) }}"
+                                          class="d-inline">
+
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="return confirm(
+                                                    'Voulez-vous refuser cette candidature ?'
+                                                );">
+
+                                            ❌ Refuser
+
+                                        </button>
+
+                                    </form>
+
+
+                                {% elif application.statut == "Acceptée" %}
+
+
+                                    <!-- =========================
+                                         CANDIDATURE ACCEPTEE
+                                    ========================== -->
+
+                                    <span class="badge bg-success p-2">
+
+                                        ✅ Candidature acceptée
+
+                                    </span>
+
+
+                                {% elif application.statut == "Refusée" %}
+
+
+                                    <!-- =========================
+                                         CANDIDATURE REFUSEE
+                                    ========================== -->
+
+                                    <span class="badge bg-danger p-2">
+
+                                        ❌ Candidature refusée
+
+                                    </span>
+
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- =========================
+             AUCUNE CANDIDATURE
+        ========================== -->
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+
+                <div style="font-size:50px;">
+
+                    📭
+
+                </div>
+
+
+                {% if search or statut or offer_id %}
+
+
+                    <h5 class="mt-3">
+
+                        Aucun résultat
+
+                    </h5>
+
+
+                    <p class="text-muted">
+
+                        Aucune candidature ne correspond
+                        aux critères de recherche.
+
+                    </p>
+
+
+                    <a href="{{ url_for('recruiter_applications') }}"
+                       class="btn btn-outline-primary">
+
+                        ↻ Afficher toutes les candidatures
+
+                    </a>
+
+
+                {% else %}
+
+
+                    <h5 class="mt-3">
+
+                        Aucune candidature reçue
+
+                    </h5>
+
+
+                    <p class="text-muted">
+
+                        Les candidatures des étudiants
+                        apparaîtront ici.
+
+                    </p>
+
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}

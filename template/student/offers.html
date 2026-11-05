@@ -1,0 +1,308 @@
+{% extends 'base2.html' %}
+
+{% block title %}
+Offres de stage
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- TITRE -->
+
+    <div class="mb-4">
+
+        <h2>
+            🔎 Offres de stage
+        </h2>
+
+        <p class="text-muted">
+            Découvrez les offres de stage disponibles.
+        </p>
+
+    </div>
+
+
+    <!-- BARRE DE RECHERCHE -->
+
+    <div class="mb-5">
+
+        <div class="row g-2">
+
+            <div class="col-12">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="form-control"
+                    placeholder="Rechercher une offre par mot-clé..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LISTE DES OFFRES -->
+
+    <div class="row g-4" id="offersContainer">
+
+        {% if offers %}
+
+            {% for offer in offers %}
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="card border-0 shadow-sm h-100">
+
+                        <div class="card-body">
+
+                            <h5 class="fw-bold">
+                                {{ offer.titre }}
+                            </h5>
+
+
+                            <p class="text-muted">
+                                {{ offer.description }}
+                            </p>
+
+
+                            {% if offer.lieu %}
+
+                                <p>
+                                    📍 {{ offer.lieu }}
+                                </p>
+
+                            {% endif %}
+
+
+                            {% if offer.type_stage %}
+
+                                <p>
+                                    💼 {{ offer.type_stage }}
+                                </p>
+
+                            {% endif %}
+
+
+                            {% if offer.duree %}
+
+                                <p>
+                                    ⏱️ {{ offer.duree }}
+                                </p>
+
+                            {% endif %}
+
+
+                            <a
+                                href="{{ url_for('student_offer_detail', offer_id=offer.id) }}"
+                                class="btn btn-primary w-100 mt-3"
+                            >
+
+                                Voir l'offre
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="col-12">
+
+                <div class="alert alert-info">
+
+                    Aucune offre de stage disponible
+                    pour le moment.
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- RECHERCHE EN TEMPS RÉEL -->
+
+<script>
+
+const searchInput = document.getElementById('searchInput');
+
+const offersContainer = document.getElementById('offersContainer');
+
+let searchTimeout = null;
+
+
+searchInput.addEventListener('input', function () {
+
+    const keyword = this.value.trim();
+
+
+    // Petit délai pour éviter trop de requêtes
+
+    clearTimeout(searchTimeout);
+
+
+    searchTimeout = setTimeout(function () {
+
+
+        fetch(
+            "{{ url_for('ajax_search_offers') }}?keyword="
+            + encodeURIComponent(keyword)
+        )
+
+        .then(function(response) {
+
+            return response.json();
+
+        })
+
+        .then(function(offers) {
+
+
+            // Effacer les anciens résultats
+
+            offersContainer.innerHTML = '';
+
+
+            // Aucune offre trouvée
+
+            if (offers.length === 0) {
+
+                offersContainer.innerHTML = `
+
+                    <div class="col-12">
+
+                        <div class="alert alert-info">
+
+                            Aucune offre ne correspond au mot-clé
+                            « ${keyword} ».
+
+                        </div>
+
+                    </div>
+
+                `;
+
+                return;
+            }
+
+
+            // Afficher les nouvelles offres
+
+            offers.forEach(function(offer) {
+
+
+                let card = `
+
+                    <div class="col-md-6 col-lg-4">
+
+                        <div class="card border-0 shadow-sm h-100">
+
+                            <div class="card-body">
+
+                                <h5 class="fw-bold">
+                                    ${offer.titre}
+                                </h5>
+
+                                <p class="text-muted">
+                                    ${offer.description}
+                                </p>
+
+                `;
+
+
+                if (offer.lieu) {
+
+                    card += `
+
+                        <p>
+                            📍 ${offer.lieu}
+                        </p>
+
+                    `;
+
+                }
+
+
+                if (offer.type_stage) {
+
+                    card += `
+
+                        <p>
+                            💼 ${offer.type_stage}
+                        </p>
+
+                    `;
+
+                }
+
+
+                if (offer.duree) {
+
+                    card += `
+
+                        <p>
+                            ⏱️ ${offer.duree}
+                        </p>
+
+                    `;
+
+                }
+
+
+                card += `
+
+                                <a
+                                    href="/student/offers/${offer.id}"
+                                    class="btn btn-primary w-100 mt-3"
+                                >
+
+                                    Voir l'offre
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                offersContainer.innerHTML += card;
+
+            });
+
+        })
+
+        .catch(function(error) {
+
+            console.error(
+                "Erreur lors de la recherche :",
+                error
+            );
+
+        });
+
+
+    }, 300);
+
+});
+
+</script>
+
+{% endblock %}

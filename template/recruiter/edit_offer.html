@@ -1,0 +1,407 @@
+{% extends 'base2.html' %}
+
+{% block title %}
+Modifier l'offre
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-9">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4">
+
+                    <!-- =========================
+                         TITRE
+                    ========================== -->
+
+                    <h3 class="fw-bold mb-2">
+                        ✏️ Modifier l'offre
+                    </h3>
+
+                    <p class="text-muted mb-4">
+                        Modifiez les informations de votre offre de stage.
+                    </p>
+
+
+                    <!-- =========================
+                         MESSAGES
+                    ========================== -->
+
+                    {% with messages =
+                        get_flashed_messages(
+                            with_categories=true
+                        )
+                    %}
+
+                        {% if messages %}
+
+                            {% for category, message in messages %}
+
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    {% endwith %}
+
+
+                    <!-- =========================
+                         FORMULAIRE
+                    ========================== -->
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'edit_offer',
+                            offer_id=offer.id
+                        ) }}"
+                    >
+
+
+                        <!-- TITRE -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="titre"
+                                class="form-label fw-bold"
+                            >
+                                Titre de l'offre *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="titre"
+                                name="titre"
+                                class="form-control"
+                                value="{{ offer.titre or '' }}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- DOMAINE / TYPE -->
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="domaine"
+                                    class="form-label fw-bold"
+                                >
+                                    Domaine
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="domaine"
+                                    name="domaine"
+                                    class="form-control"
+                                    value="{{ offer.domaine or '' }}"
+                                >
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="type_stage"
+                                    class="form-label fw-bold"
+                                >
+                                    Type de stage
+                                </label>
+
+                                <select
+                                    id="type_stage"
+                                    name="type_stage"
+                                    class="form-select"
+                                >
+
+                                    <option value="">
+                                        Sélectionner
+                                    </option>
+
+                                    <option
+                                        value="Stage d'été"
+                                        {% if offer.type_stage == "Stage d'été" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Stage d'été
+                                    </option>
+
+                                    <option
+                                        value="Stage obligatoire"
+                                        {% if offer.type_stage == "Stage obligatoire" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Stage obligatoire
+                                    </option>
+
+                                    <option
+                                        value="PFE"
+                                        {% if offer.type_stage == "PFE" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        PFE
+                                    </option>
+
+                                    <option
+                                        value="Stage d'observation"
+                                        {% if offer.type_stage == "Stage d'observation" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Stage d'observation
+                                    </option>
+
+                                    <option
+                                        value="Autre"
+                                        {% if offer.type_stage == "Autre" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Autre
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="description"
+                                class="form-label fw-bold"
+                            >
+                                Description *
+                            </label>
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                class="form-control"
+                                rows="6"
+                                required
+                            >{{ offer.description or '' }}</textarea>
+
+                        </div>
+
+
+                        <!-- COMPETENCES -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="competences"
+                                class="form-label fw-bold"
+                            >
+                                Compétences recherchées
+                            </label>
+
+                            <textarea
+                                id="competences"
+                                name="competences"
+                                class="form-control"
+                                rows="3"
+                            >{{ offer.competences or '' }}</textarea>
+
+                        </div>
+
+
+                        <!-- DUREE / LIEU -->
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="duree"
+                                    class="form-label fw-bold"
+                                >
+                                    Durée
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="duree"
+                                    name="duree"
+                                    class="form-control"
+                                    value="{{ offer.duree or '' }}"
+                                    placeholder="Ex : 3 mois"
+                                >
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="lieu"
+                                    class="form-label fw-bold"
+                                >
+                                    Lieu
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="lieu"
+                                    name="lieu"
+                                    class="form-control"
+                                    value="{{ offer.lieu or '' }}"
+                                    placeholder="Ex : Tunis"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DATES -->
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="date_debut"
+                                    class="form-label fw-bold"
+                                >
+                                    Date de début
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="date_debut"
+                                    name="date_debut"
+                                    class="form-control"
+                                    value="{{ offer.date_debut or '' }}"
+                                >
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="date_limite"
+                                    class="form-label fw-bold"
+                                >
+                                    Date limite
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="date_limite"
+                                    name="date_limite"
+                                    class="form-control"
+                                    value="{{ offer.date_limite or '' }}"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- STATUT -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="statut"
+                                class="form-label fw-bold"
+                            >
+                                Statut de l'offre
+                            </label>
+
+                            <select
+                                id="statut"
+                                name="statut"
+                                class="form-select"
+                            >
+
+                                <option
+                                    value="active"
+                                    {% if offer.statut == "active" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Active
+                                </option>
+
+                                <option
+                                    value="inactive"
+                                    {% if offer.statut == "inactive" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Inactive
+                                </option>
+
+                                <option
+                                    value="fermee"
+                                    {% if offer.statut == "fermee" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Fermée
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- BOUTONS -->
+
+                        <div class="d-flex gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                💾 Enregistrer les modifications
+                            </button>
+
+
+                            <a
+                                href="{{ url_for('recruiter_offers') }}"
+                                class="btn btn-secondary"
+                            >
+                                Annuler
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

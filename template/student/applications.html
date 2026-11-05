@@ -1,0 +1,194 @@
+{% extends 'base2.html' %}
+
+{% block title %}
+Mes candidatures
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- TITRE -->
+
+    <div class="mb-4">
+
+        <h2 class="fw-bold">
+            📄 Mes candidatures
+        </h2>
+
+        <p class="text-muted">
+            Suivez l'état de vos candidatures aux offres de stage.
+        </p>
+
+    </div>
+
+
+    {% if applications %}
+
+        <div class="row g-4">
+
+            {% for application in applications %}
+
+                <div class="col-md-6">
+
+                    <div class="card border-0 shadow-sm h-100">
+
+                        <div class="card-body p-4">
+
+                            <!-- TITRE OFFRE -->
+
+                            <h5 class="fw-bold">
+
+                                {% if application.offer %}
+
+                                    {{ application.offer.titre }}
+
+                                {% else %}
+
+                                    Offre de stage
+
+                                {% endif %}
+
+                            </h5>
+
+
+                            <!-- DATE -->
+
+                            <p class="text-muted mb-2">
+
+                                📅 Date de candidature :
+
+                                {% if application.date_candidature %}
+
+                                    {{ application.date_candidature.strftime('%d/%m/%Y') }}
+
+                                {% else %}
+
+                                    Non disponible
+
+                                {% endif %}
+
+                            </p>
+
+
+                            <!-- STATUT -->
+
+                            <div class="mb-3">
+
+                                <strong>
+                                    Statut :
+                                </strong>
+
+                                {% if application.statut == "En attente" %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        En attente
+                                    </span>
+
+                                {% elif application.statut == "Acceptée" %}
+
+                                    <span class="badge bg-success">
+                                        Acceptée
+                                    </span>
+
+                                {% elif application.statut == "Refusée" %}
+
+                                    <span class="badge bg-danger">
+                                        Refusée
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        {{ application.statut or "Non défini" }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- COMMENTAIRE -->
+
+                            {% if application.commentaire %}
+
+                                <div class="alert alert-light">
+
+                                    <strong>
+                                        Commentaire du recruteur :
+                                    </strong>
+
+                                    <br>
+
+                                    {{ application.commentaire }}
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- BOUTON -->
+
+                            {% if application.offer %}
+
+                                <a
+                                    href="{{ url_for(
+                                        'student_offer_detail',
+                                        offer_id=application.offer.id
+                                    ) }}"
+                                    class="btn btn-outline-primary">
+
+                                    Voir l'offre
+
+                                </a>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <!-- AUCUNE CANDIDATURE -->
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center p-5">
+
+                <div style="font-size: 60px;">
+                    📭
+                </div>
+
+                <h4 class="mt-3">
+                    Aucune candidature
+                </h4>
+
+                <p class="text-muted">
+                    Vous n'avez pas encore postulé à une offre de stage.
+                </p>
+
+                <a
+                    href="{{ url_for('student_offers') }}"
+                    class="btn btn-primary">
+
+                    🔎 Consulter les offres
+
+                </a>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

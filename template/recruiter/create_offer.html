@@ -1,0 +1,411 @@
+{% extends 'base2.html' %}
+
+
+{% block title %}
+Publier une offre de stage
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-9">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4">
+
+
+                    <!-- =========================
+                         TITRE
+                    ========================== -->
+
+                    <div class="mb-4">
+
+                        <h3 class="fw-bold">
+                            📢 Publier une offre de stage
+                        </h3>
+
+                        <p class="text-muted">
+                            Créez une nouvelle offre afin de trouver
+                            le candidat idéal.
+                        </p>
+
+                    </div>
+
+
+                    <!-- =========================
+                         MESSAGES FLASK
+                    ========================== -->
+
+                    {% with messages =
+                        get_flashed_messages(
+                            with_categories=true
+                        )
+                    %}
+
+                        {% if messages %}
+
+                            {% for category, message in messages %}
+
+                                <div
+                                    class="alert alert-{{ category }}"
+                                >
+                                    {{ message }}
+                                </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    {% endwith %}
+
+
+                    <!-- =========================
+                         FORMULAIRE
+                    ========================== -->
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('create_offer') }}"
+                    >
+
+
+                        <!-- =========================
+                             TITRE OFFRE
+                        ========================== -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="titre"
+                                class="form-label fw-bold"
+                            >
+                                Titre de l'offre *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="titre"
+                                name="titre"
+                                class="form-control"
+                                placeholder="Ex : Stage Data Analyst"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- =========================
+                             DOMAINE + TYPE
+                        ========================== -->
+
+                        <div class="row">
+
+
+                            <!-- Domaine -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="domaine"
+                                    class="form-label fw-bold"
+                                >
+                                    Domaine
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="domaine"
+                                    name="domaine"
+                                    class="form-control"
+                                    placeholder="Ex : Informatique"
+                                >
+
+                            </div>
+
+
+                            <!-- Type -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="type_stage"
+                                    class="form-label fw-bold"
+                                >
+                                    Type de stage
+                                </label>
+
+                                <select
+                                    id="type_stage"
+                                    name="type_stage"
+                                    class="form-select"
+                                >
+
+                                    <option value="">
+                                        Sélectionner
+                                    </option>
+
+                                    <option value="Stage d'été">
+                                        Stage d'été
+                                    </option>
+
+                                    <option value="Stage obligatoire">
+                                        Stage obligatoire
+                                    </option>
+
+                                    <option value="PFE">
+                                        PFE
+                                    </option>
+
+                                    <option value="Stage d'observation">
+                                        Stage d'observation
+                                    </option>
+
+                                    <option value="Stage à temps plein">
+                                        Stage à temps plein
+                                    </option>
+
+                                    <option value="Autre">
+                                        Autre
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =========================
+                             DESCRIPTION
+                        ========================== -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="description"
+                                class="form-label fw-bold"
+                            >
+                                Description de l'offre *
+                            </label>
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                class="form-control"
+                                rows="6"
+                                placeholder="Décrivez le stage, les missions et les responsabilités..."
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- =========================
+                             COMPETENCES
+                        ========================== -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="competences"
+                                class="form-label fw-bold"
+                            >
+                                Compétences recherchées
+                            </label>
+
+                            <textarea
+                                id="competences"
+                                name="competences"
+                                class="form-control"
+                                rows="3"
+                                placeholder="Ex : Python, SQL, Power BI, Machine Learning..."
+                            ></textarea>
+
+                            <small class="text-muted">
+                                Séparez les compétences par des virgules.
+                            </small>
+
+                        </div>
+
+
+                        <!-- =========================
+                             DUREE + LIEU
+                        ========================== -->
+
+                        <div class="row">
+
+
+                            <!-- Durée -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="duree"
+                                    class="form-label fw-bold"
+                                >
+                                    Durée
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="duree"
+                                    name="duree"
+                                    class="form-control"
+                                    placeholder="Ex : 3 mois"
+                                >
+
+                            </div>
+
+
+                            <!-- Lieu -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="lieu"
+                                    class="form-label fw-bold"
+                                >
+                                    Lieu
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="lieu"
+                                    name="lieu"
+                                    class="form-control"
+                                    placeholder="Ex : Tunis"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =========================
+                             DATES
+                        ========================== -->
+
+                        <div class="row">
+
+
+                            <!-- Date début -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="date_debut"
+                                    class="form-label fw-bold"
+                                >
+                                    Date de début souhaitée
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="date_debut"
+                                    name="date_debut"
+                                    class="form-control"
+                                >
+
+                            </div>
+
+
+                            <!-- Date limite -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="date_limite"
+                                    class="form-label fw-bold"
+                                >
+                                    Date limite de candidature
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="date_limite"
+                                    name="date_limite"
+                                    class="form-control"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =========================
+                             INFORMATION ENTREPRISE
+                        ========================== -->
+
+                        <div class="card bg-light border-0 mt-3 mb-4">
+
+                            <div class="card-body">
+
+                                <h6 class="fw-bold">
+                                    🏢 Entreprise
+                                </h6>
+
+                                <p class="mb-1">
+                                    <strong>
+                                        {{ recruiter.nom_entreprise or
+                                           "Nom de l'entreprise non renseigné" }}
+                                    </strong>
+                                </p>
+
+                                <p class="text-muted mb-0">
+
+                                    {{ recruiter.secteur or
+                                       "Secteur non renseigné" }}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =========================
+                             BOUTONS
+                        ========================== -->
+
+                        <div class="d-flex gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+
+                                📢 Publier l'offre
+
+                            </button>
+
+
+                            <a
+                                href="{{ url_for('recruiter_dashboard') }}"
+                                class="btn btn-secondary"
+                            >
+
+                                Annuler
+
+                            </a>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

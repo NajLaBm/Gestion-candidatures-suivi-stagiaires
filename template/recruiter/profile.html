@@ -1,0 +1,252 @@
+{% extends 'base2.html' %}
+
+
+{% block title %}
+Mon profil entreprise
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4">
+
+                    <h3 class="mb-4">
+                        🏢 Mon profil entreprise
+                    </h3>
+
+
+                    <!-- Messages -->
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+
+                        {% if messages %}
+
+                            {% for category, message in messages %}
+
+                                <div class="alert alert-{{ category }}">
+
+                                    {{ message }}
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    {% endwith %}
+
+
+                    <form method="POST">
+
+
+                        <!-- =====================
+                             INFORMATIONS USER
+                        ====================== -->
+
+                        <h5 class="mb-3">
+                            👤 Informations du responsable
+                        </h5>
+
+
+                        <div class="row">
+
+
+                            <!-- Nom -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Nom
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="nom"
+                                    class="form-control"
+                                    value="{{ user.nom or '' }}"
+                                    required>
+
+                            </div>
+
+
+                            <!-- Prénom -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Prénom
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="prenom"
+                                    class="form-control"
+                                    value="{{ user.prenom or '' }}"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Email -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Email
+                            </label>
+
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                value="{{ user.email or '' }}"
+                                required>
+
+                        </div>
+
+
+                        <hr>
+
+
+                        <!-- =====================
+                             ENTREPRISE
+                        ====================== -->
+
+                        <h5 class="mb-3">
+                            🏢 Informations de l'entreprise
+                        </h5>
+
+
+                        <!-- Nom entreprise -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Nom de l'entreprise
+                            </label>
+
+                            <input
+                                type="text"
+                                name="nom_entreprise"
+                                class="form-control"
+                                value="{{ recruiter.nom_entreprise or '' }}"
+                                required>
+
+                        </div>
+
+
+                        <!-- Secteur -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Secteur d'activité
+                            </label>
+
+                            <input
+                                type="text"
+                                name="secteur"
+                                class="form-control"
+                                value="{{ recruiter.secteur or '' }}"
+                                placeholder="Ex : Informatique">
+
+                        </div>
+
+
+                        <!-- Téléphone -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Téléphone
+                            </label>
+
+                            <input
+                                type="tel"
+                                name="telephone"
+                                class="form-control"
+                                value="{{ recruiter.telephone or '' }}"
+                                placeholder="Ex : 22123456">
+
+                        </div>
+
+
+                        <!-- Adresse -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Adresse
+                            </label>
+
+                            <input
+                                type="text"
+                                name="adresse"
+                                class="form-control"
+                                value="{{ recruiter.adresse or '' }}">
+
+                        </div>
+
+
+                        <!-- Description -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Description de l'entreprise
+                            </label>
+
+                            <textarea
+                                name="description"
+                                class="form-control"
+                                rows="4"
+                                placeholder="Présentez votre entreprise...">{{ recruiter.description or '' }}</textarea>
+
+                        </div>
+
+
+                        <!-- =====================
+                             BOUTONS
+                        ====================== -->
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary">
+
+                            💾 Enregistrer les modifications
+
+                        </button>
+
+
+                        <a
+                            href="{{ url_for('recruiter_dashboard') }}"
+                            class="btn btn-secondary">
+
+                            Retour
+
+                        </a>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
