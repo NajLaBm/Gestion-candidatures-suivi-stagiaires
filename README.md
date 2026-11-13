@@ -139,7 +139,6 @@ Gestion-candidatures-suivi-stagiaires/
 └── README.md
 ```
 
-*Cette arborescence est illustrative : adapte-la aux fichiers et dossiers réellement présents dans ton dépôt.*
 
 ## ⚙️ Installation et lancement
 
